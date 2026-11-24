@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>SafeHer Voice – Your Personal Safety Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--p:#6C3CE9;--pp:#6C3CE9;--bg:#F4F0FF;--c:#fff;--t:#1E1535;--m:#5B5273;--ln:#DDD3F5;--pk:#FDE1EE;--r:#D4202F;--g:#11804A;--gb:#DDF5E8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);font-family:'Times New Roman',Times,'Liberation Serif',serif}
+:root[data-theme=dark]{--bg:#140F22;--c:#201A33;--t:#F3EEFF;--m:#B9AED3;--ln:#3A3057;--pk:#3B2236;--gb:#12362A;--pp:#B9A0FF;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font-size:19px;line-height:1.5}button,input,select{font-family:inherit}
+h1,h2,h3{margin:.2em 0}h2{font-size:1.25rem}p{margin:.3em 0}.m{color:var(--m)}
+.shell{display:flex;flex-direction:column;min-height:100vh}
+main{width:100%;max-width:860px;margin:auto;padding:16px 16px 110px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--c);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;font-size:.78rem;color:var(--m);text-decoration:none;min-height:56px}
+nav a[aria-current=page]{color:var(--pp);font-weight:700}nav .lg{display:none}
+@media(min-width:900px){.shell{flex-direction:row}nav{position:sticky;top:0;height:100vh;width:230px;flex-direction:column;justify-content:flex-start;gap:4px;padding:20px 12px;border-top:0;border-right:1px solid var(--ln)}nav a{flex:none;flex-direction:row;gap:12px;font-size:1rem;padding:12px 14px;border-radius:12px;min-height:48px}nav a[aria-current=page]{background:var(--bg)}nav .lg{display:block;font-weight:700;font-size:1.2rem;padding:0 14px 16px;color:var(--pp)}main{padding:32px}}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.lg{font-weight:700;font-size:1.3rem;color:var(--pp)}
+.ib{width:48px;height:48px;border-radius:50%;background:var(--c);display:grid;place-items:center;color:var(--pp);border:1px solid var(--ln)}
+.cd{background:var(--c);border:1px solid var(--ln);border-radius:20px;padding:18px;margin-bottom:14px}
+.g2{display:grid;gap:14px}@media(min-width:640px){.g2{grid-template-columns:1fr 1fr}}
+.vc{text-align:center;background:linear-gradient(180deg,var(--c),var(--pk))}
+.mic{width:132px;height:132px;border-radius:50%;border:0;background:var(--p);color:#fff;cursor:pointer;margin:6px auto;display:grid;place-items:center;box-shadow:0 0 0 10px rgba(108,60,233,.15)}
+.mic svg{width:52px;height:52px}.mic.on{background:var(--r);animation:pl 1.2s infinite}
+@keyframes pl{50%{box-shadow:0 0 0 22px rgba(212,32,47,.12)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.rp{background:var(--bg);border-radius:12px;padding:10px 14px;font-weight:700}
+.b{min-height:52px;padding:0 20px;border-radius:14px;border:2px solid var(--p);background:var(--p);color:#fff;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;margin:3px 0}
+.b.o{background:transparent;color:var(--pp)}.b.r{background:var(--r);border-color:var(--r);color:#fff}.b.gr{background:var(--g);border-color:var(--g);color:#fff}.b.w{width:100%}
+.sos{width:100%;min-height:84px;font-size:1.6rem;background:var(--r);border-color:var(--r);color:#fff;letter-spacing:.04em}
+:focus-visible{outline:4px solid #F59E0B;outline-offset:2px}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;background:var(--bg);font-weight:700;font-size:.95rem}.pill.a{background:var(--gb);color:var(--g)}.pill.d{background:var(--pk);color:var(--r)}
+.big{font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums}
+label{display:block;font-weight:700;margin:12px 0 4px}input,select{width:100%;min-height:50px;font:inherit;padding:8px 12px;border-radius:12px;border:2px solid var(--ln);background:var(--c);color:var(--t)}input[type=checkbox]{width:26px;min-height:26px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.er{color:var(--r);font-weight:700}
+.ov{position:fixed;inset:0;background:rgba(20,10,40,.6);display:grid;place-items:center;padding:16px;z-index:20;overflow:auto}.ov[hidden]{display:none}
+.box{background:var(--c);border-radius:22px;padding:22px;max-width:480px;width:100%;max-height:92vh;overflow:auto}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:var(--t);color:var(--bg);padding:12px 18px;border-radius:14px;z-index:30;max-width:90vw}#toast:empty{display:none}
+.mono{word-break:break-all;font-size:.95rem}.demo{background:var(--pk);padding:8px 12px;border-radius:12px;font-size:.95rem}
+body{background:radial-gradient(circle at 8% 8%,rgba(108,60,233,.22),transparent 38%),radial-gradient(circle at 92% 85%,rgba(232,80,143,.16),transparent 42%),radial-gradient(circle at 50% 50%,rgba(108,60,233,.06),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Ccircle cx='24' cy='24' r='2' fill='%236C3CE9' fill-opacity='.14'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%236C3CE9' fill-opacity='.10'/%3E%3Ccircle cx='48' cy='48' r='1.5' fill='%236C3CE9' fill-opacity='.10'/%3E%3C/svg%3E"),linear-gradient(160deg,var(--bg) 0%,var(--pk) 160%) fixed}
+.bn{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-bottom:8px}.sm{min-height:44px;padding:0 14px;font-size:.95rem}
+.pbar{height:12px;border-radius:99px;background:var(--bg);overflow:hidden;margin:8px 0}.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--p),#E8508F);transition:width .9s linear}
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:10px 0}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:104px;padding:12px;background:var(--c);border:1px solid var(--ln);border-radius:18px;color:var(--t);font:inherit;font-weight:700;text-decoration:none;cursor:pointer;text-align:center}.tile:hover{border-color:var(--p)}
+.st span{display:flex;gap:6px;align-items:center}
+.sk{height:90px;border-radius:14px;background:linear-gradient(90deg,var(--bg),var(--ln),var(--bg));background-size:200% 100%;animation:sh 1.2s infinite}@keyframes sh{to{background-position:-200% 0}}
+.box{animation:pop .18s ease-out}@keyframes pop{from{transform:scale(.96);opacity:0}}
+#fc{position:fixed;inset:0;z-index:50;background:linear-gradient(#2a1b5e,#0f0a24);color:#fff;display:grid;align-content:center;justify-items:center;gap:10px;text-align:center;padding:24px}
+#fc .b.o{color:#fff;border-color:#fff}.av{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#6C3CE9,#E8508F);display:grid;place-items:center;font-size:3rem;font-weight:700}
+.ringing{animation:pl2 1.2s infinite}@keyframes pl2{50%{opacity:.5}}.fcb{display:flex;gap:16px;margin-top:30px}
+.disc{max-width:420px;margin:auto}body:has(.disc){background:#ececec;color:#222}
+</style></head><body><div id="app"></div><div id="ov" class="ov" hidden><div class="box" id="bx" role="dialog" aria-modal="true" tabindex="-1"></div></div><div id="toast" role="status" aria-live="polite"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='safeher-voice-v1',SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let S={set:{lang:'en',voice:true,vlang:'en-IN',hist:true,dark:matchMedia('(prefers-color-scheme: dark)').matches,ci:30},contacts:[],hist:[],j:null,ci:null,loc:null,perm:'unknown',locErr:'',locBusy:false,tracking:false,heard:'',reply:'',listening:false,arrived:false};
+try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d){Object.assign(S.set,d.set||{});S.contacts=d.contacts||[];S.hist=d.hist||[];S.j=d.j||null;S.ci=d.ci||null}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({set:S.set,contacts:S.contacts,hist:S.hist,j:S.j,ci:S.ci}))}catch(e){toast('Could not save on this device (storage unavailable).')}};
+const D={en:{home:'Home',journey:'Journey',safety:'Safety',contacts:'Contacts',history:'History',prefs:'Settings',tag:'Your safety, one step at a time.',tap:'Tap and speak',eg:'Try: “Start my journey”',listening:'Listening...',heard:'I heard',sos:'SOS',share:'Share location',start:'Start my journey',end:'End journey',nojourney:'No active journey',active:'Journey active',arrivedC:'Safe arrival confirmed',locon:'Location enabled',locoff:'Location not enabled',locun:'Location unavailable',checkin:'Safe check-in',next:'Next check-in due in',imsafe:"I'm safe",needhelp:'Need help',later:'Remind me later',novoice:'Voice recognition is not supported in this browser. You can use the buttons below.',cancel:'Cancel',trusted:'Trusted contacts'},
+hi:{home:'होम',journey:'यात्रा',safety:'सुरक्षा',contacts:'संपर्क',history:'इतिहास',prefs:'सेटिंग्स',tag:'आपकी सुरक्षा, एक-एक कदम।',tap:'दबाएँ और बोलें',eg:'बोलें: “मेरी journey शुरू करो”',listening:'सुन रहा हूँ...',heard:'मैंने सुना',sos:'SOS',share:'लोकेशन शेयर करें',start:'मेरी यात्रा शुरू करें',end:'यात्रा समाप्त करें',nojourney:'कोई यात्रा सक्रिय नहीं',active:'यात्रा जारी है',arrivedC:'सुरक्षित पहुँचना पक्का हुआ',locon:'लोकेशन चालू है',locoff:'लोकेशन चालू नहीं है',locun:'लोकेशन उपलब्ध नहीं',checkin:'सुरक्षित चेक-इन',next:'अगला चेक-इन',imsafe:'मैं सुरक्षित हूँ',needhelp:'मदद चाहिए',later:'बाद में याद दिलाएँ',novoice:'इस ब्राउज़र में आवाज़ पहचान उपलब्ध नहीं है। नीचे दिए बटन इस्तेमाल करें।',cancel:'रद्द करें',trusted:'भरोसेमंद संपर्क'}};
+const t=k=>(D[S.set.lang]||D.en)[k]||D.en[k]||k;
+const fmt=ms=>{ms=Math.max(0,Math.floor(ms/1000));const h=Math.floor(ms/3600),m=Math.floor(ms%3600/60),s=ms%60,p=n=>String(n).padStart(2,'0');return(h?h+':':'')+p(m)+':'+p(s)};
+const dt=x=>new Date(x).toLocaleString([], {dateStyle:'medium',timeStyle:'short'});
+function toast(m){const e=$('#toast');e.textContent=m;clearTimeout(toast.t);toast.t=setTimeout(()=>e.textContent='',4500)}
+function M(h){$('#bx').innerHTML=h;$('#ov').hidden=false;try{lucide.createIcons()}catch(e){}const f=$('#bx button,#bx input,#bx a');(f||$('#bx')).focus()}
+function X(){$('#ov').hidden=true;$('#bx').innerHTML=''}
+function speak(x){if(!S.set.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(x);u.lang=S.set.lang==='hi'?'hi-IN':'en-IN';speechSynthesis.speak(u)}catch(e){}}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=660;g.gain.value=.08;o.connect(g);g.connect(a.destination);o.start();setTimeout(()=>{o.stop();a.close()},500)}catch(e){}}
+/* phone */
+const norm=p=>{const s=String(p).replace(/[\s\-()]/g,'');if(s[0]==='+')return s;if(/^0?[6-9]\d{9}$/.test(s))return'+91'+s.slice(-10);if(/^91[6-9]\d{9}$/.test(s))return'+'+s;return s};
+const okPhone=p=>/^\+91[6-9]\d{9}$/.test(p)||/^\+(?!91)[1-9]\d{7,14}$/.test(p);
+const prim=()=>S.contacts.find(c=>c.primary)||S.contacts[0];
+/* journey */
+let tm=null;
+const startTick=()=>{clearInterval(tm);tm=setInterval(tick,1000)};
+function tick(){const n=Date.now();document.querySelectorAll('[data-jt]').forEach(e=>e.textContent=S.j?fmt(n-S.j.start):'00:00');document.querySelectorAll('[data-jl]').forEach(e=>e.textContent=S.j?fmt(S.j.endAt-n):'—');document.querySelectorAll('[data-ct]').forEach(e=>e.textContent=S.ci?fmt(S.ci.at-n):'Not set');
+ if(S.ci&&!S.ci.prompted&&n>=S.ci.at){S.ci.prompted=true;save();ciModal()}
+ if(S.j&&!S.j.over&&n>=S.j.endAt){S.j.over=true;save();beep();M(`<h2>Planned time is up</h2><p>Your planned journey time has ended. Nothing was sent to anyone.</p><button class="b gr w" data-a="jend">End journey</button><button class="b o w" data-a="extend">Add 15 more minutes</button>`)}}
+function ciModal(){beep();toast('Check-in time');M(`<h2>Are you safe?</h2><p>It's time for your check-in. Nobody has been alerted, and nothing is sent unless you choose it.</p><button class="b gr w" data-a="ciok">${t('imsafe')}</button><button class="b r w" data-a="sos">${t('needhelp')}</button><button class="b o w" data-a="cilater">${t('later')} (5 min)</button><hr><p class="m">Prefer to reach someone?</p>${prim()?`<a class="b o w" href="tel:${E(prim().phone)}">Call ${E(prim().name)}</a>`:''}<button class="b o w" data-a="share">Share my location</button>`)}
+function jstart(f){const v=n=>f.elements[n].value,cu=n=>parseInt(v(n+'c'),10);
+ const dur=cu('d')||+v('d'),ci=cu('ci')||+v('ci');
+ if(!(dur>=1&&dur<=1440)||(ci&&!(ci>=1&&ci<=1440))){$('#ferr').textContent='Enter minutes between 1 and 1440.';return}
+ const n=Date.now();S.j={start:n,endAt:n+dur*60000,dest:v('dest').trim(),cid:v('cid'),track:f.elements.tr.checked};S.arrived=false;
+ S.ci=ci?{at:n+ci*60000,mins:ci}:null;save();startTick();speak('Journey started');toast('Journey started');
+ if(S.j.track)askLoc(()=>watch());location.hash='#home';render()}
+function jend(){if(!S.j)return;const j=S.j,n=Date.now();stopWatch();S.j=null;S.ci=null;S.pend={id:n,start:j.start,end:n,dest:j.dest};save();render();
+ M(`<h2>Journey completed.</h2><p>Location tracking has stopped. Did you reach safely?</p><button class="b gr w" data-a="reach">Yes, I reached safely</button><button class="b o w" data-a="notyet">Not yet</button>`)}
+function finish(st){const p=S.pend;if(p&&S.set.hist){S.hist.unshift({...p,status:st});S.hist=S.hist.slice(0,100)}S.pend=null;S.arrived=st==='Safe arrival confirmed';save();X();render()}
+/* contacts */
+function cForm(id){const c=S.contacts.find(x=>x.id===id)||{};M(`<h2>${id?'Edit':'Add'} contact</h2><form data-f="contact" novalidate><input type="hidden" name="id" value="${E(id||'')}"><label for="cn">Name</label><input id="cn" name="n" required value="${E(c.name)}"><label for="cp">Phone (e.g. 98765 43210 or +44…)</label><input id="cp" name="p" inputmode="tel" required value="${E(c.phone)}"><label for="cr">Relationship</label><input id="cr" name="r" value="${E(c.rel)}"><label for="ce">Email (optional)</label><input id="ce" name="e" type="email" value="${E(c.email)}"><p id="cerr" class="er" role="alert"></p><button class="b w">Save contact</button><button type="button" class="b o w" data-a="close">${t('cancel')}</button></form>`)}
+/* SOS */
+const msg=()=>`I need help. I may be in an unsafe situation. My current location is: ${S.loc?link(S.loc):'(location not available)'}. Please contact me immediately.`;
+function sosOpts(){M(`<h2>Emergency options</h2><p class="m">Nothing has been sent. SafeHer Voice cannot send SMS itself — your message is ready. Choose your messaging app to send it.</p><a class="b r w" href="tel:112">Call emergency services (112)</a>
+${S.contacts.map(c=>`<div class="cd"><b>${E(c.name)}</b> ${c.primary?'<span class="pill">Primary</span>':''}<br><a class="b w" href="tel:${E(c.phone)}">Call ${E(c.phone)}</a><a class="b o w" href="sms:${E(c.phone)}?&body=${encodeURIComponent(msg())}">Open messages</a><a class="b o w" target="_blank" rel="noopener" href="https://wa.me/${E(c.phone.replace(/\D/g,''))}?text=${encodeURIComponent(msg())}">WhatsApp</a></div>`).join('')||'<p>No trusted contacts saved yet. <a href="#contacts" data-a="close">Add one</a>.</p>'}
+<label>Message</label><p class="rp mono">${E(msg())}</p>${S.loc?'':'<button class="b o w" data-a="locfor">Add my location</button>'}<button class="b o w" data-a="copymsg">Copy message</button><button class="b o w" data-a="share">Share location…</button><button class="b o w" data-a="close">Close</button>`)}
+function shareM(){if(!S.loc){askLoc(()=>shareM());return}const u=encodeURIComponent(msg());
+ M(`<h2>Share my location</h2><p>Choose how to share. Nothing is sent until you pick one.</p><p class="mono">${S.loc.lat}, ${S.loc.lon}<br><a href="${link(S.loc)}" target="_blank" rel="noopener">${link(S.loc)}</a></p><button class="b w" data-a="copylink">Copy location link</button>${navigator.share?'<button class="b w" data-a="native">Share via device…</button>':''}<a class="b w" target="_blank" rel="noopener" href="https://wa.me/?text=${u}">WhatsApp</a><button class="b o w" data-a="close">${t('cancel')}</button>`)}
+const copy=(x,ok)=>{(navigator.clipboard?navigator.clipboard.writeText(x):Promise.reject()).then(()=>toast(ok),()=>toast('Could not copy. Select and copy the text manually.'))};
+/* voice */
+let rec=null;
+function say(x){S.reply=x;speak(x);render()}
+function mic(){if(!SR){say(t('novoice'));return}if(rec){rec.stop();return}
+ try{rec=new SR();rec.lang=S.set.vlang;rec.interimResults=false;rec.maxAlternatives=1;
+ rec.onstart=()=>{S.listening=true;S.heard='';S.reply='';render()};
+ rec.onresult=e=>{const r=e.results[0][0];S.heard=r.transcript;handle(r.transcript,r.confidence)};
+ rec.onerror=e=>{S.reply=['not-allowed','service-not-allowed'].includes(e.error)?'Microphone permission was blocked. Allow it in your browser settings, or use the buttons.':e.error==='no-speech'?'I did not hear anything. Tap the microphone and try again.':'Voice recognition had a problem. You can use the buttons instead.'};
+ rec.onend=()=>{S.listening=false;rec=null;render()};rec.start()}catch(e){rec=null;S.listening=false;say('Could not start the microphone. You can use the buttons.')}}
+function handle(x,conf){const s=x.toLowerCase();
+ if(conf!==undefined&&conf>0&&conf<.45)return say('I am not sure I understood that. Please try again or use the buttons.');
+ if(/contact|संपर्क/.test(s)){if(/call|कॉल|phone|ring/.test(s)){const c=prim();if(!c)return say('You have no trusted contacts yet. Add one first.');say('Do you want to call '+c.name+'? Please confirm.');return M(`<h2>Call ${E(c.name)}?</h2><a class="b gr w" href="tel:${E(c.phone)}">Yes, call ${E(c.phone)}</a><button class="b o w" data-a="close">${t('cancel')}</button>`)}location.hash='#contacts';return say('Showing your trusted contacts.')}
+ if(/unsafe|emergency|help|madad|bachao|मदद|असुरक्षित|बचाओ/.test(s)){say('I heard a request for help. Please confirm. Nothing has been sent.');return sosConfirm()}
+ if(/reached|pahunch|पहुँच|पहुंच|i'?m safe|i am safe|journey complete|stop journey|journey (band|khatam)|यात्रा समाप्त/.test(s)){if(!S.j)return say('There is no active journey to end.');say('Ending your journey.');return jend()}
+ if(/location|where am i|kahan|लोकेशन|कहाँ/.test(s)){if(/share|bhej|शेयर/.test(s)){say('Please confirm how you want to share your location.');return shareM()}say('Checking your location.');return askLoc()}
+ if(/(start|begin|shuru|शुरू|travell?ing).*|journey|trip|यात्रा/.test(s)&&/start|begin|shuru|शुरू|travell?ing|journey|trip/.test(s)){say('Opening journey setup.');location.hash='#journey';return}
+ S.reply='I did not recognise a command, so I did nothing. Try “Start my journey”, “I feel unsafe” or “Where am I?”.';render()}
+function sosConfirm(){M(`<h2>Are you sure you want to request help?</h2><p>This opens emergency options. Nothing is sent automatically.</p><button class="b r w" data-a="sosgo">Confirm Emergency</button><button class="b o w" data-a="close">${t('cancel')}</button>`)}
+/* pages */
+const jStat=()=>S.j?t('active'):S.arrived?t('arrivedC'):t('nojourney');
+function jCard(){return`<div class="cd"><div class="row"><h2>${t('journey')}</h2><span class="pill ${S.j||S.arrived?'a':''}">${jStat()}</span></div>${S.j?`<p class="big" data-jt>00:00</p><p>Destination: ${E(S.j.dest||'Not set')}</p><p>Time left: <b data-jl></b></p><p>${S.tracking?t('locon'):S.perm==='denied'?t('locun'):t('locoff')}</p><button class="b r w" data-a="jend">${t('end')}</button>`:`<p class="m">Set a destination and timer when you are ready.</p><a class="b w" href="#journey">${t('start')}</a>`}</div>`}
+function ciCard(){return`<div class="cd"><div class="row"><h2>${t('checkin')}</h2><span class="pill ${S.ci?'a':''}">${S.ci?'On':'Off'}</span></div><p>${t('next')}: <b class="big" data-ct style="font-size:1.4rem">${S.ci?fmt(S.ci.at-Date.now()):'Not set'}</b></p><button class="b gr w" data-a="ciok">${t('imsafe')}</button><a class="b o w" href="#safety">Set up check-ins</a></div>`}
+const P={
+home:()=>`<header class="hd"><div><div class="lg"><i data-lucide="shield-check"></i> SafeHer Voice</div><p class="m">${t('tag')}</p></div><a class="ib" href="#prefs" aria-label="${t('prefs')}"><i data-lucide="user-round"></i></a></header>
+<section class="cd vc"><button class="mic ${S.listening?'on':''}" data-a="mic" aria-label="${S.listening?'Stop listening':t('tap')}"><i data-lucide="${S.listening?'square':'mic'}"></i></button><h2>${S.listening?t('listening'):t('tap')}</h2><p class="m">${t('eg')}</p>${S.heard?`<p>${t('heard')}: “${E(S.heard)}”</p>`:''}${S.reply?`<p class="rp" role="status">${E(S.reply)}</p>`:''}${SR?'':`<p class="er">${t('novoice')}</p>`}</section>
+<section class="cd"><button class="b sos" data-a="sos"><i data-lucide="siren"></i> ${t('sos')}</button><div class="g2"><a class="b o" href="#contacts"><i data-lucide="users"></i> ${t('trusted')}</a><button class="b o" data-a="share"><i data-lucide="map-pin"></i> ${t('share')}</button></div></section>
+<div class="g2">${jCard()}${ciCard()}</div>`,
+journey:()=>S.j?jCard()+locPanel():`<h1>${t('start')}</h1><form data-f="journey" class="cd" novalidate><label for="dest">Destination (optional)</label><input id="dest" name="dest" maxlength="80" autocomplete="off"><label for="d">Journey duration</label><select id="d" name="d">${[15,30,45,60,90,120].map(m=>`<option value="${m}" ${m===60?'selected':''}>${m} min</option>`).join('')}</select><label for="dc">Or custom minutes</label><input id="dc" name="dc" type="number" min="1" max="1440" inputmode="numeric"><label for="ci">Check in every</label><select id="ci" name="ci"><option value="0">No check-ins</option>${[15,30,45,60].map(m=>`<option value="${m}" ${m===S.set.ci?'selected':''}>${m} min</option>`).join('')}</select><label for="cic">Or custom check-in minutes</label><input id="cic" name="cic" type="number" min="1" max="1440" inputmode="numeric"><label for="cid">Trusted contact for updates</label><select id="cid" name="cid"><option value="">None</option>${S.contacts.map(c=>`<option value="${c.id}" ${c.primary?'selected':''}>${E(c.name)}</option>`).join('')}</select><p class="m">Updates are shared only when you press a share button. Nothing is sent automatically.</p><label><input type="checkbox" name="tr" checked> Track my location during this journey</label><p id="ferr" class="er" role="alert"></p><button class="b w">${t('start')}</button></form>`,
+safety:()=>`<h1>Safety Mode</h1><div class="cd"><button class="b sos" data-a="sos"><i data-lucide="siren"></i> ${t('sos')}</button><a class="b o w" href="tel:112">Call emergency services (112)</a><button class="b o w" data-a="share">${t('share')}</button></div>${locPanel()}<div class="cd"><h2>${t('checkin')}</h2><p>${t('next')}: <b data-ct>${S.ci?fmt(S.ci.at-Date.now()):'Not set'}</b></p>${[15,30,45,60].map(m=>`<button class="b o" data-a="ciset" data-m="${m}">${m} min</button> `).join('')}<form data-f="cicustom"><label for="cm">Custom minutes</label><input id="cm" name="m" type="number" min="1" max="1440" inputmode="numeric" required><button class="b">Start check-ins</button></form>${S.ci?'<button class="b o" data-a="cioff">Turn off check-ins</button>':''}<p class="m">A missed check-in never alerts anyone by itself. You are always asked first.</p></div>`,
+contacts:()=>`<div class="row"><h1>${t('trusted')}</h1><button class="b" data-a="cadd"><i data-lucide="plus"></i> Add contact</button></div>${S.contacts.length?S.contacts.map(c=>`<div class="cd"><div class="row"><b>${E(c.name)}</b>${c.primary?'<span class="pill a">Primary</span>':''}</div><p>${E(c.rel||'')} ${c.demo?'<span class="demo">Demo data</span>':''}</p><p class="mono">${E(c.phone)}${c.email?'<br>'+E(c.email):''}</p><a class="b gr" href="tel:${E(c.phone)}">Call</a> <button class="b o" data-a="ccopy" data-id="${c.id}">Copy number</button> <button class="b o" data-a="cedit" data-id="${c.id}">Edit</button>${c.primary?'':` <button class="b o" data-a="cprim" data-id="${c.id}">Make primary</button>`} <button class="b o" data-a="cdel" data-id="${c.id}">Delete</button></div>`).join(''):'<div class="cd"><p>No trusted contacts yet. Add someone you trust so you can reach them quickly.</p></div>'}`,
+history:()=>`<div class="row"><h1>${t('history')}</h1>${S.hist.length?'<button class="b o" data-a="hclear">Clear history</button>':''}</div>${S.set.hist?'':'<p class="demo">History saving is off in Settings.</p>'}${S.hist.length?S.hist.map(h=>`<div class="cd"><div class="row"><b>${dt(h.start)}</b><span class="pill ${h.status==='Safe arrival confirmed'?'a':''}">${E(h.status)}</span></div><p>${E(h.dest||'No destination')} · ${fmt(h.end-h.start)}</p><button class="b o" data-a="hview" data-id="${h.id}">Details</button> <button class="b o" data-a="hdel" data-id="${h.id}">Delete</button></div>`).join(''):'<div class="cd"><p>No completed journeys yet. Start one from Journey. Only times and status are saved, never coordinates.</p></div>'}`,
+prefs:()=>{const sel=(k,o)=>`<select data-s="${k}">${o.map(([v,l])=>`<option value="${v}" ${String(S.set[k])===String(v)?'selected':''}>${l}</option>`).join('')}</select>`,ck=(k,l)=>`<label><input type="checkbox" data-s="${k}" ${S.set[k]?'checked':''}> ${l}</label>`;
+return`<h1>${t('prefs')}</h1><div class="cd"><label>Language / भाषा</label>${sel('lang',[['en','English'],['hi','हिन्दी']])}<label>Voice recognition language</label>${sel('vlang',[['en-IN','English (India)'],['hi-IN','Hindi / Hinglish']])}${ck('voice','Spoken voice responses')}${ck('dark','Dark mode')}${ck('hist','Save journey history on this device')}<label>Default check-in</label>${sel('ci',[15,30,45,60].map(m=>[m,m+' min']))}<label>Emergency contact</label><select data-s="pc"><option value="">${S.contacts.length?'Choose…':'Add a contact first'}</option>${S.contacts.map(c=>`<option value="${c.id}" ${c.primary?'selected':''}>${E(c.name)}</option>`).join('')}</select></div>
+<div class="cd"><h2>Location permission</h2><p>Status: <b>${S.perm==='granted'?t('locon'):S.perm==='denied'?t('locun'):t('locoff')}</b></p><button class="b o" data-a="locask">Enable location</button> ${S.tracking?'<button class="b o" data-a="stopw">Stop tracking</button>':''}</div>
+<div class="cd"><h2>Privacy</h2><p>Your data is stored on this device unless you explicitly choose to share it. Location is accessed only when you enable location-dependent features. You remain in control of location sharing and emergency alerts.</p><p class="m">Audio is never recorded or stored. Features needing a server (real SMS, automatic alerts) are not included; messages open in your own apps.</p><button class="b r" data-a="reset">Reset application data</button></div>`}};
+function render0(){const r=(location.hash.slice(1)||'home'),pg=P[r]?r:'home';
+ const ic={home:'house',journey:'route',toolkit:'toolbox',contacts:'users',history:'history',prefs:'settings'};
+ $('#app').innerHTML=`<div class="shell"><nav aria-label="Main"><div class="lg">SafeHer Voice</div>${Object.keys(ic).map(k=>`<a href="#${k}" ${k===pg?'aria-current="page"':''}><i data-lucide="${ic[k]}"></i>${t(k)}</a>`).join('')}</nav><main>${P[pg]()}</main></div>`;
+ document.documentElement.dataset.theme=S.set.dark?'dark':'light';document.documentElement.lang=S.set.lang;try{lucide.createIcons()}catch(e){}tick()}
+/* events */
+const A={mic,close:X,sos:sosConfirm,sosgo:sosOpts,share:shareM,
+ allow(){const c=askLoc.cb;X();getLoc(c)},notnow(){X();S.locErr='';toast('No problem. You can enable location later.')},
+ locask(){askLoc()},locfor(){askLoc(sosOpts)},stopw(){stopWatch();toast('Location tracking stopped.');render()},
+ addr(){if(!S.loc)return;M(`<h2>Look up address?</h2><p>This sends your coordinates to OpenStreetMap Nominatim, a third party. Continue?</p><button class="b w" data-a="addrgo">Yes, look up</button><button class="b o w" data-a="close">${t('cancel')}</button>`)},
+ addrgo(){X();fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${S.loc.lat}&lon=${S.loc.lon}`).then(r=>r.json()).then(j=>{S.loc.addr=j.display_name||'';render()}).catch(()=>toast('Address lookup is not available right now.'))},
+ jend,extend(){S.j.endAt+=9e5;S.j.over=false;save();X();render()},reach(){finish('Safe arrival confirmed')},
+ notyet(){finish('Ended — arrival not confirmed');M(`<h2>Take your time</h2><p>If you need help, you can reach out now.</p><button class="b r w" data-a="sos">${t('needhelp')}</button><button class="b o w" data-a="close">Close</button>`)},
+ ciok(){if(S.ci){S.ci={at:Date.now()+S.ci.mins*60000,mins:S.ci.mins};save()}X();toast('Check-in noted on this device. Nobody was notified.');render()},
+ cilater(){S.ci.at=Date.now()+3e5;S.ci.prompted=false;save();X();render()},
+ ciset(d){S.ci={at:Date.now()+d.m*60000,mins:+d.m};save();startTick();toast('Check-in set');render()},cioff(){S.ci=null;save();render()},
+ copymsg(){copy(msg(),'Message copied.')},copylink(){copy(link(S.loc),'Location link copied.')},
+ native(){navigator.share({title:'My location',text:msg()}).catch(()=>{})},
+ cadd(){cForm()},cedit(d){cForm(d.id)},ccopy(d){copy(S.contacts.find(c=>c.id===d.id).phone,'Number copied.')},
+ cprim(d){S.contacts.forEach(c=>c.primary=c.id===d.id);save();render()},
+ cdel(d){const c=S.contacts.find(x=>x.id===d.id);M(`<h2>Delete ${E(c.name)}?</h2><p>This removes the contact from this device.</p><button class="b r w" data-a="cdelgo" data-id="${c.id}">Delete</button><button class="b o w" data-a="close">${t('cancel')}</button>`)},
+ cdelgo(d){S.contacts=S.contacts.filter(c=>c.id!==d.id);if(S.contacts.length&&!S.contacts.some(c=>c.primary))S.contacts[0].primary=true;save();X();render()},
+ hview(d){const h=S.hist.find(x=>x.id==d.id);M(`<h2>Journey details</h2><p>Date: ${new Date(h.start).toLocaleDateString()}<br>Start: ${new Date(h.start).toLocaleTimeString()}<br>End: ${new Date(h.end).toLocaleTimeString()}<br>Duration: ${fmt(h.end-h.start)}<br>Destination: ${E(h.dest||'—')}<br>Status: ${E(h.status)}</p><button class="b w" data-a="close">Close</button>`)},
+ hdel(d){S.hist=S.hist.filter(x=>x.id!=d.id);save();render()},
+ hclear(){M(`<h2>Clear all history?</h2><button class="b r w" data-a="hclrgo">Clear history</button><button class="b o w" data-a="close">${t('cancel')}</button>`)},hclrgo(){S.hist=[];save();X();render()},
+ reset(){M(`<h2>Reset all data?</h2><p>This deletes contacts, history and settings on this device.</p><button class="b r w" data-a="resetgo">Reset everything</button><button class="b o w" data-a="close">${t('cancel')}</button>`)},
+ resetgo(){stopWatch();clearInterval(tm);try{localStorage.removeItem(KEY)}catch(e){}location.hash='#home';location.reload()}};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||!A[el.dataset.a])return;if(el.tagName==='A'&&el.dataset.a!=='close')return;A[el.dataset.a](el.dataset)});
+document.addEventListener('change',e=>{const k=e.target.dataset.s;if(!k)return;let v=e.target.type==='checkbox'?e.target.checked:e.target.value;
+ if(k==='pc'){S.contacts.forEach(c=>c.primary=c.id===v)}else{S.set[k]=k==='ci'?+v:v;if(k==='lang')S.set.vlang=v==='hi'?'hi-IN':'en-IN'}save();render()});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,k=f.dataset.f;
+ if(k==='journey')jstart(f);
+ if(k==='cicustom'){const m=parseInt(f.elements.m.value,10);if(m>=1&&m<=1440)A.ciset({m})}
+ if(k==='contact'){const n=f.elements.n.value.trim(),p=norm(f.elements.p.value),em=f.elements.e.value.trim(),er=$('#cerr');
+  if(!n)return er.textContent='Enter a name.';if(!okPhone(p))return er.textContent='Enter a valid phone number: 10-digit Indian mobile, or international starting with +.';
+  if(em&&!/^\S+@\S+\.\S+$/.test(em))return er.textContent='Enter a valid email or leave it empty.';
+  const id=f.elements.id.value,o={name:n,phone:p,rel:f.elements.r.value.trim(),email:em};
+  if(id)Object.assign(S.contacts.find(c=>c.id===id),o);else S.contacts.push({id:'c'+Date.now(),...o,primary:!S.contacts.length});
+  save();X();render()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#ov').hidden)X()});
+addEventListener('hashchange',()=>{if(rec)try{rec.abort()}catch(e){}render();scrollTo(0,0)});
+addEventListener('pagehide',()=>{stopWatch();if(rec)try{rec.abort()}catch(e){}});
+/* ===== v2 upgrade ===== */
+S.set=Object.assign({onb:false,disc:false,demo:false,rem:true,remf:20,fname:'Mom'},S.set);
+Object.assign(D.en,{toolkit:'Toolkit'});Object.assign(D.hi,{toolkit:'टूलकिट'});
+S.net=navigator.onLine;S.bat=null;S.mic='unknown';S.ob=0;S.rm=null;S.rn=null;
+try{navigator.getBattery&&navigator.getBattery().then(b=>{const u=()=>{S.bat=Math.round(b.level*100);render()};S.bat=Math.round(b.level*100);b.addEventListener('levelchange',u)}).catch(()=>{})}catch(e){}
+try{navigator.permissions&&navigator.permissions.query({name:'microphone'}).then(p=>{S.mic=p.state;p.onchange=()=>{S.mic=p.state;render()}}).catch(()=>{})}catch(e){}
+addEventListener('online',()=>{S.net=true;render()});addEventListener('offline',()=>{S.net=false;render()});
+const OB=[['Your safety companion','shield-check','SafeHer Voice helps you travel with confidence: track a journey, check in, and reach people you trust in a few taps.'],['Your voice. Your choice.','mic','Speak in Hindi, English or Hinglish: “Start my journey”, “Mujhe help chahiye”, “मेरी लोकेशन शेयर करो”. Voice is optional; every action also has a button.'],['Stay connected','map-pin','Share your location, call trusted contacts and use journey check-ins, only when you choose. Location and microphone are asked for only when you first use those features, never now. Your data stays on this device.']];
+function renderOnb(){const [h,i,p]=OB[S.ob],l=S.ob===2;$('#app').innerHTML=`<main style="min-height:100vh;display:grid;align-content:center"><div class="cd vc"><div class="mic" style="cursor:default" aria-hidden="true"><i data-lucide="${i}"></i></div><h1>${h}</h1><p>${p}</p><p class="m" aria-label="Step ${S.ob+1} of 3">${OB.map((_,k)=>k===S.ob?'●':'○').join(' ')}</p>${l?'<button class="b gr w" data-a="obdone">Get Started</button>':'<button class="b w" data-a="obnext">Next</button><button class="b o w" data-a="obdone">Skip</button>'}</div></main>`;try{lucide.createIcons()}catch(e){}}
+function renderDisc(){document.documentElement.dataset.theme='light';$('#app').innerHTML=`<main class="disc" style="min-height:100vh;display:grid;align-content:center;gap:10px"><h1>Quiet mode</h1><p class="m">The screen is plain and calm. Your safety tools are still here.</p><button class="b w" data-a="undisc">Return to safety dashboard</button><button class="b r w" data-a="sos">I need help</button><a class="b o w" href="tel:112">Call 112</a><button class="b o w" data-a="share">Share location</button><button class="b o w" data-a="fcm">Fake call</button></main>`}
+function banners(){let h='<div class="bn">';if(S.set.demo)h+='<span class="pill d">DEMO MODE</span> <button class="b o sm" data-a="demooff">Exit demo</button> ';h+='<button class="b o sm" data-a="disc"><i data-lucide="eye-off"></i> Quick exit</button></div>';
+ if(!S.net)h+='<p class="demo er" role="alert">You are offline. Saved contacts, emergency numbers and timers still work. Maps, WhatsApp, address lookup and location links need internet.</p>';
+ if(S.rm)h+=`<div class="cd" role="alert"><p><b>${E(S.rm)}</b></p><button class="b sm" data-a="remci">Check in</button> <button class="b o sm" data-a="share">Share location</button> <button class="b o sm" data-a="remsn">Snooze 10 min</button> <button class="b o sm" data-a="remx">Dismiss</button></div>`;return h+''}
+function render(){document.documentElement.dataset.theme=S.set.dark?'dark':'light';if(!S.set.onb)return renderOnb();if(S.set.disc)return renderDisc();render0();const m=$('main');if(m)m.insertAdjacentHTML('afterbegin',banners());try{lucide.createIcons()}catch(e){}}
+/* reminders + progress */
+function rem(m){S.rm=m;beep();render()}
+function ext(){if(!S.j){S.rn=null;return}if(!S.set.rem||S.rm)return;const n=Date.now(),f=(+S.set.remf||20)*60000;if(!S.rn)S.rn={next:n+f,i:0,near:false};
+ if(!S.rn.near&&S.j.endAt>n&&S.j.endAt-n<=3e5){S.rn.near=true;return rem('Your journey timer is nearly complete.')}
+ if(S.j.over&&!S.rn.reach){S.rn.reach=true;return rem('Have you reached your destination?')}
+ if(n>=S.rn.next){const m=['Would you like to check in?','Would you like to share your location with a trusted contact?'];S.rn.next=n+f;rem(m[S.rn.i++%2])}}
+const tick0=tick;tick=function(){tick0();ext();document.querySelectorAll('[data-pb]').forEach(e=>{if(S.j)e.style.width=Math.min(100,(Date.now()-S.j.start)/(S.j.endAt-S.j.start)*100)+'%'})};
+jCard=function(){const j=S.j,n=Date.now();if(!j)return`<div class="cd"><div class="row"><h2>${t('journey')}</h2><span class="pill ${S.arrived?'a':''}">${jStat()}</span></div><p class="m">Set a destination and timer when you are ready.</p><a class="b w" href="#journey">${t('start')}</a></div>`;
+ const c=S.contacts.find(x=>x.id===j.cid);return`<div class="cd"><div class="row"><h2>${t('journey')}</h2><span class="pill a">${t('active')}${j.over?' · time is up':''}</span></div><div class="pbar" role="progressbar" aria-label="Journey progress"><i data-pb style="width:${Math.min(100,(n-j.start)/(j.endAt-j.start)*100)}%"></i></div><p class="big" data-jt>00:00</p><p>Started ${new Date(j.start).toLocaleTimeString()} · Planned ${Math.round((j.endAt-j.start)/60000)} min · Left <b data-jl></b></p><p>Destination: ${E(j.dest||'Not set')}<br>Contact: ${c?E(c.name):'None'}<br>${S.tracking?'Live tracking on':S.loc&&S.perm==='granted'?'Location enabled':S.perm==='denied'?t('locun'):t('locoff')}${S.ci?' · Next check-in <b data-ct></b>':''}</p><div>Extend: ${[10,15,30].map(m=>`<button class="b o sm" data-a="ext" data-m="${m}">+${m} min</button>`).join(' ')}</div><button class="b r w" data-a="jend">${t('end')}</button></div>`};
+const lp0=locPanel;locPanel=function(){let h=lp0();if(S.locBusy)h=h.replace('<p>Finding your location...</p>','<div class="sk" aria-label="Loading"></div>');if(S.loc&&S.loc.demo)h=h.replace('<h2>Your location</h2>','<h2>Sample location <span class="pill d">DEMO</span></h2>');return h};
+const ask0=askLoc;askLoc=function(cb){if(S.set.demo){toast('Demo mode uses sample data. Your real location is not requested.');return}ask0(cb)};
+const fin0=finish;finish=function(st){if(S.pend&&/\(demo\)/.test(S.pend.dest||''))S.pend=null;fin0(st)};
+const h0=handle;handle=function(x,c){const s=x.toLowerCase();if(c!==undefined&&c>0&&c<.45)return h0(x,c);
+ if(/fake call|फेक कॉल|call lagao|सुरक्षित कॉल|safe call/.test(s)){say('Starting a simulated call in 5 seconds.');return fcSched(5)}
+ if(/discreet|quiet mode|डिस्क्रीट/.test(s)){say('Turning on discreet mode.');return A.disc()}
+ if(/यात्रा बंद|journey band/.test(s)&&S.j){say('Ending your journey.');return jend()}
+ h0(x,c)};
+/* fake call */
+let fcT=null,fcI=null,fcC=null;
+function fcStop(){clearTimeout(fcT);clearInterval(fcI);clearInterval(fcC);fcT=fcI=fcC=null;try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}const o=$('#fc');if(o)o.remove()}
+function fcSched(sec){fcStop();sec=+sec;X();if(sec<=0)return fcRing();fcT=setTimeout(()=>{fcT=null;fcRing()},sec*1000);toast('Fake call in '+(sec<60?sec+' seconds':sec/60+' min')+'.')}
+function fcRing(){clearInterval(fcI);const old=$('#fc');if(old)old.remove();const nm=S.set.fname||'Mom',o=document.createElement('div');o.id='fc';o.setAttribute('role','dialog');o.setAttribute('aria-label','Simulated incoming call');o.innerHTML=`<div class="av">${E(nm[0]||'?')}</div><h1>${E(nm)}</h1><p class="ringing">Incoming call… (simulated)</p><div class="fcb"><button class="b r" data-a="fcno">Decline</button><button class="b gr" data-a="fcyes">Accept</button></div>`;document.body.appendChild(o);const r=()=>{beep();try{navigator.vibrate&&navigator.vibrate([400,200,400])}catch(e){}};r();fcI=setInterval(r,2500);o.querySelector('button').focus()}
+/* pages */
+const tile=(a,i,l,href)=>href?`<a class="tile" href="${href}"><i data-lucide="${i}"></i>${l}</a>`:`<button class="tile" data-a="${a}"><i data-lucide="${i}"></i>${l}</button>`;
+P.toolkit=()=>`<h1>Safety Toolkit</h1><div class="tg">${tile('fcm','phone-incoming','Fake call')}<a class="tile" href="tel:112"><i data-lucide="phone-call"></i>Emergency call 112</a>${tile('','users','Trusted contacts','#contacts')}${tile('share','map-pin','Share location')}${tile('','route','Journey tracker','#journey')}${tile('','alarm-clock','Safety check-in','#safety')}${tile('disc','eye-off','Quick exit')}${tile('','hospital','Nearby help','#nearby')}${tile('','shield','Safety mode','#safety')}${tile('','lock','Privacy dashboard','#privacy')}</div><div class="cd"><h2>Important emergency numbers (India)</h2><p>112 emergency · 100 Police · 101 Fire · 102 Ambulance · 1091 or 181 Women helpline</p><p class="m">Numbers can change; verify locally. Calls need a phone line.</p></div>`;
+P.nearby=()=>{const l=S.loc&&!S.loc.demo&&!S.set.demo?S.loc:null,u=k=>`https://www.openstreetmap.org/search?query=${encodeURIComponent(k)}${l?`#map=15/${l.lat}/${l.lon}`:''}`;
+ return`<h1>Nearby help</h1><div class="cd">${l?'<p>Searches are centred on your location.</p>':'<p>Turn on location to centre searches on you, or search without it.</p><button class="b" data-a="locask">Enable location</button>'}${S.net?'':'<p class="er">You are offline. Map search needs internet.</p>'}<div class="tg">${[['hospital','Hospitals','hospital'],['police station','Police stations','shield-alert'],['pharmacy','Pharmacies','pill'],['bus station','Public transport','bus']].map(([k,n,i])=>`<a class="tile" target="_blank" rel="noopener" href="${u(k)}"><i data-lucide="${i}"></i>${n}</a>`).join('')}</div><p><b>Verify the location and availability before travelling there.</b></p><p class="m">These buttons open OpenStreetMap search. SafeHer Voice does not list or vouch for any place.</p></div>`};
+P.privacy=()=>{let z=0;try{z=(localStorage.getItem(KEY)||'').length}catch(e){}const ck=(k,l)=>`<label><input type="checkbox" data-s="${k}" ${S.set[k]?'checked':''}> ${l}</label>`;
+ return`<h1>Privacy dashboard</h1><div class="cd"><p>Location permission: <b>${S.perm==='granted'?'Allowed':S.perm==='denied'?'Denied':'Not asked yet'}</b></p><p>Microphone: <b>${S.mic==='unknown'?(SR?'Not asked / unknown':'Not supported'):S.mic}</b></p><p>Location tracking: <b>${S.tracking?'On':'Off'}</b></p><p>Location sharing: <b>Only when you press a share button. Never automatic.</b></p><p>Journey history: <b>${S.set.hist?'Saved on this device':'Not saved'}</b> (${S.hist.length})</p><p>Saved contacts: <b>${S.contacts.length}</b></p><p>Stored on this device: <b>about ${(z/1024).toFixed(1)} KB</b></p></div><div class="cd">${ck('voice','Spoken voice responses')}${ck('rem','Safety reminders')}${ck('hist','Save journey history')}${S.tracking?'<button class="b o" data-a="stopw">Stop location tracking</button> ':''}<button class="b o" data-a="hclear">Clear journey history</button> <button class="b o" data-a="callclr">Delete all contacts</button> <button class="b r" data-a="reset">Reset all app data</button></div>`};
+const p0=P.prefs;P.prefs=()=>p0()+`<div class="cd"><h2>Safety reminders</h2><label><input type="checkbox" data-s="rem" ${S.set.rem?'checked':''}> Enable reminders</label><label for="rf">Frequency</label><select id="rf" data-s="remf">${[10,20,30,60].map(m=>`<option value="${m}" ${+S.set.remf===m?'selected':''}>every ${m} min</option>`).join('')}</select></div><div class="cd"><h2>Fake call</h2><p class="demo">This is a simulated call. It does not connect to a real person.</p><label for="fnm">Caller name</label><input id="fnm" data-s="fname" maxlength="30" value="${E(S.set.fname)}"><button class="b o" data-a="fcm">Try fake call</button></div><div class="cd"><h2>Discreet and demo</h2><button class="b o" data-a="disc">Turn on discreet mode</button><label><input type="checkbox" data-s="demo" ${S.set.demo?'checked':''}> Demo mode (sample data; nothing real is sent)</label><a class="b o" href="#privacy">Privacy dashboard</a></div>`;
+const statusPanel=()=>`<div class="cd"><h2>Status</h2><div class="tg st"><span><i data-lucide="${S.net?'wifi':'wifi-off'}"></i> ${S.net?'Online':'Offline'}</span><span><i data-lucide="map-pin"></i> ${S.perm==='granted'?'Location on':S.perm==='denied'?'Location blocked':'Location off'}</span><span><i data-lucide="mic"></i> ${!SR?'Voice unsupported':S.mic==='denied'?'Mic blocked':S.mic==='granted'?'Mic allowed':'Mic not asked'}</span><span><i data-lucide="battery"></i> ${S.bat==null?'Battery n/a':'Battery '+S.bat+'%'}</span></div><p class="m">Last location update: ${S.loc?new Date(S.loc.at).toLocaleTimeString()+(S.loc.demo?' (demo)':''):'none yet'}</p></div>`;
+const demoPanel=()=>`<div class="cd"><h2>Demo tools</h2><p class="demo">Sample data only. No real calls, messages or location sharing.</p><button class="b" data-a="dj">Simulate journey</button> <button class="b o" data-a="dci">Simulate check-in</button> <button class="b o" data-a="dsos">Show SOS screen</button> <button class="b o" data-a="dv">Voice demo</button> <button class="b o" data-a="dl">Sample location</button> <button class="b o" data-a="fcm">Fake call</button> <button class="b o" data-a="demooff">Exit demo</button></div>`;
+const hm0=P.home;P.home=()=>hm0()+(S.set.demo?demoPanel():'')+statusPanel();
+function demo(on){S.set.demo=on;if(on){if(!S.contacts.some(c=>c.demo))S.contacts.push({id:'demo1',name:'Sample Contact',phone:'+910000000000',rel:'Demo',demo:true,primary:!S.contacts.length})}else{S.contacts=S.contacts.filter(c=>!c.demo);if(S.contacts.length&&!S.contacts.some(c=>c.primary))S.contacts[0].primary=true;if(S.loc&&S.loc.demo)S.loc=null;if(S.j&&S.j.demo){S.j=null;S.ci=null}fcStop()}save();render()}
+Object.assign(A,{obnext(){S.ob++;render()},obdone(){S.set.onb=true;save();render()},disc(){S.set.disc=true;save();render()},undisc(){S.set.disc=false;save();render()},
+ ext(d){if(!S.j)return;S.j.endAt+=d.m*6e4;S.j.over=false;if(S.rn)S.rn.near=false;save();render()},
+ remci(){S.rm=null;A.ciok()},remsn(){S.rm=null;if(S.rn)S.rn.next=Date.now()+6e5;render()},remx(){S.rm=null;render()},
+ fcm(){M(`<h2>Fake call</h2><p class="demo">This is a simulated call. It does not connect to a real person.</p><label for="fn">Caller name</label><input id="fn" value="${E(S.set.fname)}" maxlength="30"><button class="b w" data-a="fcgo" data-w="0">Start now</button><button class="b o w" data-a="fcgo" data-w="30">In 30 seconds</button><button class="b o w" data-a="fcgo" data-w="60">In 1 minute</button><button class="b o w" data-a="fcgo" data-w="300">In 5 minutes</button>${fcT?'<button class="b r w" data-a="fcx">Cancel scheduled call</button>':''}<button class="b o w" data-a="close">Close</button>`)},
+ fcgo(d){const v=$('#fn');if(v&&v.value.trim()){S.set.fname=v.value.trim();save()}fcSched(d.w)},fcx(){fcStop();X();toast('Fake call cancelled.')},fcno:fcStop,
+ fcyes(){clearInterval(fcI);try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}const o=$('#fc'),nm=S.set.fname||'Mom',t0=Date.now();if(!o)return;o.innerHTML=`<div class="av">${E(nm[0]||'?')}</div><h1>${E(nm)}</h1><p class="big" id="fct">00:00</p><p>Simulated call, not connected to anyone</p><div class="fcb"><button class="b o" data-a="fcsp" aria-pressed="false">Speaker</button><button class="b o" data-a="fcmu" aria-pressed="false">Mute</button><button class="b r" data-a="fcno">End call</button></div>`;fcC=setInterval(()=>{const e=$('#fct');if(e)e.textContent=fmt(Date.now()-t0)},1000)},
+ fcsp(){const b=document.activeElement,p=b.getAttribute('aria-pressed')==='true';b.setAttribute('aria-pressed',!p);b.classList.toggle('gr',!p)},
+ callclr(){M(`<h2>Delete all contacts?</h2><p>This removes every saved contact from this device.</p><button class="b r w" data-a="callgo">Delete all</button><button class="b o w" data-a="close">${t('cancel')}</button>`)},callgo(){S.contacts=[];save();X();render()},
+ demooff(){demo(false)},dj(){const n=Date.now();S.j={start:n,endAt:n+18e4,dest:'Sample destination (demo)',cid:'demo1',track:false,demo:true};S.arrived=false;S.ci={at:n+45000,mins:1};save();startTick();render()},
+ dci(){ciModal()},dsos(){sosConfirm()},dl(){askLoc()},dv(){S.heard='I feel unsafe';say('Demo: I heard a request for help. In real use I would ask you to confirm before anything happens.')}});
+A.fcmu=A.fcsp;
+document.addEventListener('change',e=>{if(e.target.dataset.s==='demo')demo(e.target.checked)});
+document.addEventListener('click',e=>{if(!S.set.demo)return;if(e.target.closest('a[href^="tel:"],a[href^="sms:"],a[href*="wa.me"],[data-a=native]')){e.preventDefault();e.stopImmediatePropagation();toast('Demo mode: no real calls, messages or sharing.')}},true);
+addEventListener('pagehide',fcStop);
+/* ===== v3 location: real device GPS only (no fake coordinates) ===== */
+let wid=null,follow=true,mp=null,mk=null,ac=null,pendCb=null;
+const HELP={
+denied:"To turn location on: in Chrome, tap the lock or info icon beside the web address, open Permissions, set Location to Allow, then reload this page. On Android you can also go to Settings > Apps > Chrome > Permissions > Location. Also switch on Location (GPS) in your phone's quick settings.",
+timeout:"Your phone took too long to find a position. Turn on Location (GPS) in quick settings, set Location mode to High accuracy if you can, move near a window or outdoors, then tap Try again.",
+unavail:"Your phone could not determine your position. Turn on Location (GPS) and Google location accuracy in Settings > Location, then tap Try again.",
+unsupported:"This browser does not support location. Open this page in Chrome or Edge on your phone.",
+insecure:"Location needs a secure (HTTPS) connection. This page was opened over plain HTTP, so the browser blocked it. Open the https:// version of this site."};
+const inFrame=()=>{try{return window.top!==window.self}catch(e){return true}};
+const isSecure=()=>window.isSecureContext===true;
+const link=l=>`https://www.openstreetmap.org/?mlat=${l.lat}&mlon=${l.lon}#map=17/${l.lat}/${l.lon}`;
+function geoOK(){
+ if(!isSecure()){S.locErr="Location is blocked because this page is not using HTTPS.";S.locHelp=HELP.insecure;render();toast(S.locErr);return false}
+ if(!navigator.geolocation){S.locErr="Location is not supported in this browser.";S.locHelp=HELP.unsupported;render();toast(S.locErr);return false}
+ return true}
+function setLoc(p){
+ const had=!!(S.loc&&S.perm==='granted');
+ S.loc={lat:+p.coords.latitude.toFixed(6),lon:+p.coords.longitude.toFixed(6),acc:Math.round(p.coords.accuracy),at:Date.now(),addr:S.loc&&S.loc.addr};
+ S.perm='granted';S.locErr='';S.locHelp='';S.locBusy=false;
+ if(had&&updateLive())return;
+ render()}
+function locFail(e,live){
+ const c=e&&e.code;S.locBusy=false;
+ if(c===1){S.perm='denied';stopWatch();S.locErr="Location permission is blocked for this site.";S.locHelp=HELP.denied}
+ else if(c===3){S.locErr="Your phone took too long to return a location.";S.locHelp=HELP.timeout}
+ else{S.locErr="Your location is unavailable right now.";S.locHelp=HELP.unavail}
+ render();
+ if(!live||c===1)toast(S.locErr)}
+function askLoc(cb){
+ if(!geoOK())return;
+ if(S.perm==='granted'){getLoc(cb);return}
+ pendCb=cb||null;
+ M(`<h2>Allow location?</h2><p>SafeHer Voice needs your location to help you track your journey and share it with trusted contacts if you choose. Your location is not shared without your consent.</p><p class="m">Next, your phone or browser will ask you to allow location. Choose "Allow".</p><button class="b w" data-a="allow">Allow Location</button><button class="b o w" data-a="notnow">Not Now</button>`)}
+function getLoc(cb){
+ if(!geoOK())return;
+ S.locBusy=true;S.locErr='';S.locHelp='';render();
+ const ok=p=>{setLoc(p);if(cb)cb()};
+ // second attempt with network/Wi-Fi location if GPS fix times out
+ const retry=e=>{if(!e||e.code===1)return locFail(e);
+   try{navigator.geolocation.getCurrentPosition(ok,e2=>locFail(e2),{enableHighAccuracy:false,timeout:20000,maximumAge:60000})}catch(x){locFail({code:2})}};
+ try{navigator.geolocation.getCurrentPosition(ok,retry,{enableHighAccuracy:true,timeout:15000,maximumAge:0})}catch(x){locFail({code:2})}}
+function watch(){
+ stopWatch();
+ if(!geoOK())return;
+ try{
+  wid=navigator.geolocation.watchPosition(setLoc,e=>locFail(e,true),{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+  S.tracking=true;follow=true;
+ }catch(e){locFail({code:2})}
+ render()}
+function stopWatch(){
+ if(wid!==null){try{navigator.geolocation.clearWatch(wid)}catch(e){}wid=null}
+ S.tracking=false}
+function mapSync(){
+ const el=document.getElementById('lmap');
+ if(!el||!window.L||!S.loc)return;
+ if(mp&&mp.getContainer()===el){updateMarker(false);return}
+ if(mp){try{mp.remove()}catch(e){}}
+ mp=null;mk=null;ac=null;
+ try{
+  mp=L.map(el,{zoomControl:true,attributionControl:true}).setView([S.loc.lat,S.loc.lon],16);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(mp);
+  mp.on('dragstart',()=>{follow=false});
+  setTimeout(()=>{if(mp)mp.invalidateSize()},250);
+  updateMarker(false);
+ }catch(e){mp=null}}
+function updateMarker(recenter){
+ if(!mp||!S.loc)return;
+ const ll=[S.loc.lat,S.loc.lon];
+ if(!mk)mk=L.circleMarker(ll,{radius:9,color:'#fff',weight:3,fillColor:'#6C3CE9',fillOpacity:1}).addTo(mp);else mk.setLatLng(ll);
+ if(!ac)ac=L.circle(ll,{radius:S.loc.acc,color:'#6C3CE9',weight:1,fillColor:'#6C3CE9',fillOpacity:.15}).addTo(mp);else{ac.setLatLng(ll);ac.setRadius(S.loc.acc)}
+ if(recenter&&follow)mp.setView(ll,Math.max(mp.getZoom(),16));}
+function updateLive(){
+ const el=document.querySelector('[data-loc="lat"]');
+ if(!el||!S.loc)return false;
+ const l=S.loc,set=(k,v)=>{const x=document.querySelector('[data-loc="'+k+'"]');if(x)x.textContent=v};
+ set('lat',l.lat);set('lon',l.lon);set('acc','±'+l.acc+' m');set('upd',new Date(l.at).toLocaleTimeString());
+ mapSync();updateMarker(true);return true}
+function locPanel(){
+ const l=S.loc,ok=!!(l&&S.perm==='granted');
+ let h=`<div class="cd" id="locCard"><div class="row"><h2>Your location</h2><span class="pill ${ok?'a':S.perm==='denied'?'d':''}">${ok?'Location enabled':S.perm==='denied'?'Location blocked':'Location not enabled'}</span></div>`;
+ if(S.tracking)h+=`<p><span class="pill a" aria-live="polite">● Live tracking on</span> <button class="b o sm" data-a="stopw">Stop location tracking</button></p>`;
+ if(S.locBusy)h+='<div class="sk" aria-label="Finding your location"></div><p class="m">Waiting for your phone to return a position…</p>';
+ if(S.locErr)h+=`<div role="alert"><p class="er">${E(S.locErr)}</p><p>${E(S.locHelp||'')}</p>${inFrame()?'<p class="m">This page is inside a preview frame. Some browsers block location in frames. Open the site in its own tab.</p>':''}</div>`;
+ if(ok){
+  const old=Date.now()-l.at>120000;
+  h+=`<p>Latitude <b data-loc="lat">${l.lat}</b> · Longitude <b data-loc="lon">${l.lon}</b></p><p>Accuracy <span data-loc="acc">±${l.acc} m</span> · Last updated <span data-loc="upd">${new Date(l.at).toLocaleTimeString()}</span>${old?' (older position, not updating)':''}</p>`;
+  h+=window.L?`<div id="lmap" role="region" aria-label="Map of your current location" style="height:260px;border-radius:14px;margin:10px 0;position:relative;z-index:0;overflow:hidden"></div>`:'<p class="m">The map could not load (no internet, or blocked). Your coordinates are still shown.</p>';
+  h+=`<p><a href="${link(l)}" target="_blank" rel="noopener">Open in OpenStreetMap</a></p>`;
+ } else if(!S.locBusy&&!S.locErr){
+  h+='<p class="m">Location is off. It is requested only when you choose a location feature. No position is shown until your phone returns a real one.</p>';
+ }
+ h+=`<div class="bn">${ok?'<button class="b o sm" data-a="center">Center on me</button>':''}<button class="b sm" data-a="locask" ${S.locBusy?'disabled':''}>${ok?'Refresh location':S.locErr?'Try again':'Enable location'}</button></div></div>`;
+ return h}
+Object.assign(A,{
+ allow(){const c=pendCb;pendCb=null;X();getLoc(c)},
+ notnow(){pendCb=null;X();toast('No problem. You can enable location later.')},
+ locask(){askLoc()},
+ stopw(){stopWatch();toast('Location tracking stopped.');render()},
+ center(){follow=true;if(mp&&S.loc)mp.setView([S.loc.lat,S.loc.lon],17);else toast('No position yet. Tap Enable location first.')}});
+const tickL=tick;tick=function(){tickL();if(S.loc&&document.getElementById('lmap'))mapSync()};
+const jp0=P.journey;P.journey=()=>S.j?jp0():jp0()+locPanel();
+if(S.j||S.ci)startTick();render();
+</script></body></html>
